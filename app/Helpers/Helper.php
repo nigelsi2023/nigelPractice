@@ -56,7 +56,21 @@ function view(string $path, array $data = []): void {
 
     $blade = new Blade($view, $cache);
 
+    // Define the @csrf directive
+    $blade->compiler()->directive('csrf', function () {
+        return '<?php echo "<input type=\"hidden\" name=\"_token\" value=\"". $_SESSION[\'csrf_token\'] ."\">"; ?>';
+    });
+
     echo $blade->make($path, $data)->render();
+}
+/**
+ * Generate a CSRF token field.
+ *
+ * @return string The CSRF token field HTML.
+ */
+function csrf_field(): string
+{
+    return '<input type="hidden" name="_token" value="' . $_SESSION['csrf_token'] . '">';
 }
 
 
@@ -98,3 +112,30 @@ function redirect_route(string $route_name): void
     Route::redirectRoute($route_name);
 }
 
+
+/**
+ * Generate the URL for an asset file.
+ *
+ * @param string $path The relative path to the asset file
+ * @return string The fully qualified URL to the asset
+ */
+function asset(string $path): string
+{
+    // Get the base URL dynamically based on the server environment
+    $baseURL = '';
+    if (isset($_SERVER['REQUEST_SCHEME'])) {
+        $baseURL = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+    } elseif (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+        $baseURL = 'https://' . $_SERVER['HTTP_HOST'];
+    } else {
+        $baseURL = 'http://' . $_SERVER['HTTP_HOST'];
+    }
+
+    // Specify the public folder name
+    $publicFolder = 'public';
+
+    // Construct the full URL by concatenating the base URL, public folder, and the asset path
+    $assetURL = $baseURL . '/' . $publicFolder . '/' . $path;
+
+    return $assetURL;
+}

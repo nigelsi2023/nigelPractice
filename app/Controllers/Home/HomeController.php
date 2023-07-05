@@ -8,19 +8,7 @@ use App\Models\Website\Website;
 
 class HomeController extends Controller {
     public function index() {
-        $website = Website::with(['subscribers', 'posts'])->whereId(1)->firstOrFail();
-        dd($website);
-
-        // return view('home.index', compact('website'));
-        
-        // $recipient = 'nigel.si@staff-india.com';
-        // $subject = 'Test Email';
-        // $template = mail_view('emails.usermail', compact('website'));
-
-        // Mail::send($recipient, $subject, $template);
-
-        
-        // dd($website);
+        return view('guest.home.index');
     }
 
     // public function show(int $id, string $slug) {
