@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers\Website;
 
+use App\Services\Alert;
 use App\Services\Request;
 use App\Controllers\Controller;
 use App\Models\Website\Website;
@@ -18,6 +19,7 @@ class WebsiteController extends Controller {
         $website->url = $request->url;
         $website->save();
 
+        Alert::success('Website Created Successfully');
         return redirect_back();
     }
     
